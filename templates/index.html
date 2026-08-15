@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main class="page">
+        <section class="card">
+
+            <div class="header">
+                <div class="icon">🍴</div>
+                <h1>Food Recommendation System</h1>
+                <p>Find foods similar to your choice using ingredient-based recommendations.</p>
+            </div>
+
+            <form method="POST" class="form">
+
+                <label for="category">
+                    <span class="label-icon">▦</span>
+                    Select a Category
+                </label>
+
+                <div class="custom-select" id="categorySelect">
+                    <button
+                        type="button"
+                        class="select-trigger"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                    >
+                        <span id="selectedCategory">
+                            {{ category_filter }}
+                        </span>
+                        <span class="select-arrow">⌄</span>
+                    </button>
+
+                    <div class="select-options" role="listbox">
+                        {% for category in categories %}
+                        <div
+                            class="select-option {% if category_filter == category %}selected{% endif %}"
+                            role="option"
+                            data-value="{{ category }}"
+                        >
+                            {{ category }}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="category"
+                        id="categoryValue"
+                        value="{{ category_filter }}"
+                    >
+                </div>
+
+                <label for="food">Enter a Food Item</label>
+                <input
+                    type="text"
+                    id="food"
+                    name="food"
+                    value="{{ input_food }}"
+                    placeholder="Example: Pizza, Chicken, Rice, Sushi..."
+                    autocomplete="off"
+                    required
+                >
+
+                <button type="submit">Get Recommendation</button>
+            </form>
+
+            {% if message %}
+                <div class="message {{ message_type }}">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            {% if recommended_foods %}
+                <section class="results">
+                    <div class="results-title">
+                        <h2>Recommended Foods</h2>
+                        <span>{{ recommended_foods|length }} results</span>
+                    </div>
+
+                    <div class="food-grid">
+                        {% for item in recommended_foods %}
+                            <article class="food-card">
+                                <div class="food-number">{{ loop.index }}</div>
+                                <div>
+                                    <h3>{{ item.food }}</h3>
+                                    <p>{{ item.category }}</p>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            
+
+        </section>
+    </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const select = document.getElementById("categorySelect");
+    const trigger = select.querySelector(".select-trigger");
+    const options = select.querySelectorAll(".select-option");
+    const selectedText = document.getElementById("selectedCategory");
+    const hiddenInput = document.getElementById("categoryValue");
+
+    trigger.addEventListener("click", function (event) {
+        event.preventDefault();
+        const open = select.classList.toggle("open");
+        trigger.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    options.forEach(function (option) {
+        option.addEventListener("click", function () {
+            selectedText.textContent = option.dataset.value;
+            hiddenInput.value = option.dataset.value;
+
+            options.forEach(function (item) {
+                item.classList.remove("selected");
+            });
+            option.classList.add("selected");
+
+            select.classList.remove("open");
+            trigger.setAttribute("aria-expanded", "false");
+        });
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!select.contains(event.target)) {
+            select.classList.remove("open");
+            trigger.setAttribute("aria-expanded", "false");
+        }
+    });
+});
+</script>
+
+</body>
+</html>
