@@ -27,7 +27,8 @@ A web-based food recommendation system built with Flask that recommends similar 
 5. The top recommendations are displayed based on the selected category.
 
 ## Project Structure
-```Food_Recommendation_System/
+``` text
+Food_Recommendation_System/
 ├── backend.py
 ├── requirements.txt
 ├── README.md
