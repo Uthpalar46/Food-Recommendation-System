@@ -41,11 +41,13 @@ Food_Recommendation_System/
 ## Installation
 
 Install the required packages:
-* pip install -r requirements.txt
-  
+```bash
+pip install -r requirements.txt
+```
 Run the application:
-* python backend.py
-
+```bash
+python backend.py
+```
 ## Author
 
 Developed as an academic Machine Learning project using Python, Flask, and Scikit-learn.
